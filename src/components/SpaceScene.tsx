@@ -11,6 +11,7 @@ import { Hint } from "./Hint";
 import { useIsMobile } from "../hooks/useIsMobile";
 import { useWebGL } from "../hooks/useWebGL";
 import { useSceneState } from "../hooks/useSceneState";
+import { useKeyboardControls } from "../hooks/useKeyboardControls";
 import type { Project } from "../data/projects";
 
 interface SpaceCanvasProps {
@@ -68,6 +69,9 @@ export function SpaceScene() {
   const { state, selectProject, closePanel } = useSceneState();
   const controlsRef = useRef<CameraControls>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  // WASD keyboard controls
+  useKeyboardControls(controlsRef);
 
   // Hide loading screen after scene ready
   useEffect(() => {
