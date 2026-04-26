@@ -2,37 +2,7 @@ import { describe, it, expect } from "vitest";
 import { projects, type Project } from "../data/projects";
 
 // Test traceLines derivation logic from useSceneState
-const deriveTraceLines = (history: string[]): [string, string][] => {
-  if (history.length < 2) return [];
-  const lines: [string, string][] = [];
-  for (let i = 1; i < history.length; i++) {
-    lines.push([history[i - 1], history[i]]);
-  }
-  return lines;
-};
-
-describe("deriveTraceLines", () => {
-  it("should derive traceLines from visitHistory", () => {
-    const visitHistory = ["a", "b", "c"];
-    const expected: [string, string][] = [
-      ["a", "b"],
-      ["b", "c"],
-    ];
-    expect(deriveTraceLines(visitHistory)).toEqual(expected);
-  });
-
-  it("should return empty array for single project", () => {
-    expect(deriveTraceLines(["a"])).toEqual([]);
-  });
-
-  it("should return empty array for empty history", () => {
-    expect(deriveTraceLines([])).toEqual([]);
-  });
-
-  it("should handle two projects", () => {
-    expect(deriveTraceLines(["x", "y"])).toEqual([["x", "y"]]);
-  });
-});
+// No deriveTraceLines - traceLines stored as transitions in state
 
 describe("projects data", () => {
   it("should have projects array", () => {

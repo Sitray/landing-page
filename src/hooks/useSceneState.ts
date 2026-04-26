@@ -3,8 +3,9 @@ import type { Project } from '../data/projects';
 
 export interface SceneState {
   activeProject: Project | null;
-  visitHistory: string[];
-  traceLines: [string, string][]; // derived pairs
+  visitHistory: string[]; // unique visited projects
+  lastProjectId: string | null; // last clicked (for trace, can be same as current)
+  traceLines: [string, string][];
   panelOpen: boolean;
 }
 
@@ -13,26 +14,27 @@ type SceneAction =
   | { type: 'CLOSE_PANEL' }
   | { type: 'RESET' };
 
-function deriveTraceLines(history: string[]): [string, string][] {
-  if (history.length < 2) return [];
-  const lines: [string, string][] = [];
-  for (let i = 1; i < history.length; i++) {
-    lines.push([history[i - 1], history[i]]);
-  }
-  return lines;
-}
+// No derivation - traceLines stored directly as transitions
 
 function sceneReducer(state: SceneState, action: SceneAction): SceneState {
   switch (action.type) {
     case 'SELECT_PROJECT': {
+      // Track all clicks for trace (not just unique visits)
       const newHistory = state.visitHistory.includes(action.project.id)
         ? state.visitHistory
         : [...state.visitHistory, action.project.id];
+      
+      // Add line from last clicked (can be same project, will create offset lines)
+      const newTraceLines = state.lastProjectId !== null && state.lastProjectId !== action.project.id
+        ? [...state.traceLines, [state.lastProjectId, action.project.id] as [string, string]]
+        : state.traceLines;
+      
       return {
         ...state,
         activeProject: action.project,
         visitHistory: newHistory,
-        traceLines: deriveTraceLines(newHistory),
+        lastProjectId: action.project.id,
+        traceLines: newTraceLines,
         panelOpen: true,
       };
     }
@@ -46,6 +48,7 @@ function sceneReducer(state: SceneState, action: SceneAction): SceneState {
       return {
         activeProject: null,
         visitHistory: [],
+        lastProjectId: null,
         traceLines: [],
         panelOpen: false,
       };
@@ -57,6 +60,7 @@ function sceneReducer(state: SceneState, action: SceneAction): SceneState {
 const initialState: SceneState = {
   activeProject: null,
   visitHistory: [],
+  lastProjectId: null,
   traceLines: [],
   panelOpen: false,
 };

@@ -18,6 +18,7 @@ interface SpaceCanvasProps {
   onProjectSelect?: (project: Project) => void;
   activeProject?: Project | null;
   traceLines: [string, string][];
+  visitHistory: string[];
   controlsRef: React.RefObject<CameraControls>;
 }
 
@@ -25,6 +26,7 @@ function SpaceCanvas({
   onProjectSelect,
   activeProject,
   traceLines,
+  visitHistory,
   controlsRef,
 }: SpaceCanvasProps) {
   return (
@@ -41,6 +43,7 @@ function SpaceCanvas({
         <ProjectStars
           onProjectClick={onProjectSelect}
           activeProject={activeProject}
+          visitedProjects={new Set(visitHistory)}
         />
         <TraceLines traceLines={traceLines} />
         <CameraControls
@@ -116,6 +119,7 @@ export function SpaceScene() {
         onProjectSelect={selectProject}
         activeProject={state.activeProject}
         traceLines={state.traceLines}
+        visitHistory={state.visitHistory}
         controlsRef={controlsRef}
       />
       {state.activeProject && (
