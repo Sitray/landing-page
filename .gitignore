@@ -27,3 +27,6 @@ PDR.md
 
 # test coverage
 coverage/
+
+# obsidian project logger config
+.obsidian-project-root
